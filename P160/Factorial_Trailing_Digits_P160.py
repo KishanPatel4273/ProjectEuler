@@ -208,7 +208,6 @@ def solve(N : int, b : int):
     product = 1
     for v in range(1, b + 1):
         if v % 5 == 0:
-            # pass
             product *= product_of_sequence_drop_five(b, v, b, l)
         elif v % 2 == 0 and 0 < Z:
             product *= product_of_sequence(b//2, v//2, b, l)
