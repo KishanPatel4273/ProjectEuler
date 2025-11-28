@@ -79,7 +79,7 @@ def factors_of_five(n):
 def mod_pow(a : int, n : int, b : int) -> int:
     assert(is_natural_number(a))
     assert(is_natural_number(b))
-    assert(is_natural_number(n))
+    assert(is_whole_number(n) and 0 <= n)
     if b == 1:
         return 0
     # (b-1) * (b-1) should not overflow
@@ -224,5 +224,5 @@ def solve(N : int, b : int):
     e = time()
     print(f'({N}, {b}) = {product} \t took {e-s} [s]')
 
-# solve(1_000, 100)
+# solve(1_000, 1_000)
 solve(1_000_000_000_000, 1E5)
