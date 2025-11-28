@@ -115,17 +115,17 @@ Then we have the series $p_1, p_2, \cdots p_b$ whose product is $N!$.
 \subsection{Building Solution from Column's of G}
 
 Given the series $p_v$ from grid $G$ built for problem $(N_n, b_d)$ 
-we can apply sequence lemma LS4 for $v|5$ else apply LS3. This will give
+we can apply sequence lemma LS3 for $v|5$ else apply LS2. This will give
 the $\frac{N!}{5^{z(N!)}} \mod b$. Then to get the solution $(N_n, b_d)$ 
-we need to use sequence lemma LS3 to remove 2's for each 5 we removed. 
-From LS3 we can remove $\lambda$ 2's at a time. However, then we would need
+we need to use sequence lemma LS2 to remove 2's for each 5 we removed. 
+From LS2 we can remove $\lambda$ 2's at a time. However, then we would need
 to multiple back the extra 2's that were taken off. This is fine and can 
 be done mod b using lemma L1.
 \begin{align}
     Z &= \lceil \frac{z(N!)}{\lambda} \rceil \\
     R &= Z - z(N!)
 \end{align}
-There are $4\frac{b}{10}$ $p_v$ that can have LS4 applied to them. The following construction
+There are $4\frac{b}{10}$ $p_v$ that can have LS2 applied to them. The following construction
 hold if $Z \leq 4\frac{b}{10}$ else a construction of a similar form will need to be made which is 
 fairly trivial with the machinery built up in the lemmas. The construction is as follows:
 \begin{align}    
