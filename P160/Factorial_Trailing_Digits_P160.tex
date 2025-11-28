@@ -1,0 +1,341 @@
+\documentclass[11pt]{article}
+
+\usepackage{sectsty}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{amssymb}
+
+% copied from https://www.overleaf.com/learn/latex/Code_listing
+\usepackage{listings}
+\renewcommand{\lstlistingname}{Code }
+
+\usepackage{xcolor}
+
+% New colors defined below
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour}, 
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{magenta},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,         
+  breaklines=true,                 
+  captionpos=b,              
+  keepspaces=true,                 
+  numbers=left,                    
+  numbersep=5pt,                  
+  showspaces=false,                
+  showstringspaces=false,
+  showtabs=false,                  
+  tabsize=2
+}
+\lstset{style=mystyle}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\title{ Factorial Trailing Digits}
+\author{ Author }
+\date{Novemer 26, 2025}
+
+\begin{document}
+\maketitle	
+
+% Optional TOC
+\tableofcontents
+\pagebreak
+
+%--Paper--
+
+\section{Formulating Problem}
+Problem: Find the last five digits before the trailing zeroes in $N!$
+\newline 
+\newline
+Let $(N_n, b_d)$ where $N_n \coloneq 10^n$, $b_d \coloneq 10^d$, $b_d < N_n$ and $n,d \in \mathbb{N}^+$
+be the problem of finding the last $d$ digits of before the trailing zeros in $N!$. Then the 
+problem we are interested in is $(N_{12}, b_5)$.
+\newline 
+\newline
+Let $z(n)$ be a function that gives the number of trailing zeros in $n$. 
+The $z(n!)$ is given by \href{https://en.wikipedia.org/wiki/Legendre%27s_formula}{De Polignac's formula}:
+\begin{equation}
+    z(n!) = \sum^{ \lfloor log_5(n) \rfloor }_{i=1} \lfloor \frac{n}{5^i} \rfloor 
+\end{equation}
+\newline 
+\newline
+Using De Polignac's formula we can remove the trailing zeros to get the digits of interest.
+\begin{equation}
+    (N_n, b_d) = \frac{N!}{2^{z(N!)} 5^{z(N!)}} \mod b
+\end{equation}
+
+
+
+
+
+\pagebreak
+\section{Grid Construction and Introduction to Series}
+For the problem $(N_n, b_d)$ define $\lambda \coloneq \frac{N}{b} = 10^{n-d}$. 
+Then there is a grid $G$ that can be constructed with dimensions is $b \times \lambda$.
+\begin{equation}
+\begin{matrix}
+    1 & 2 & \cdots & 5 & \cdots & 10 & \cdots & b \\
+    b + 1 & b + 2 & \cdots & b + 5 & \cdots & b + 10 & \cdots & b + b \\
+    2b + 1 & 2b + 2 & \cdots & 2b + 5 & \cdots & 2b + 10 & \cdots & 2b + b \\
+    \vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots \\ 
+    (\lambda - 1)b + 1 & (\lambda - 1)b + 2 & \cdots & (\lambda - 1)b + 5 & \cdots & (\lambda - 1)b + 10 & \cdots & (\lambda - 1)b + b \\
+\end{matrix}
+\end{equation}
+The product of all the elements of $G$ is $N!$. Let $c_v$ be the $v$th column of $G$. 
+Then we define $c_v(i)$ as the $i$th element in column $c_v$. \\
+\begin{equation}
+    c_v(i) = (i-1)b + v \quad i \in \{1 \cdots \lambda\} \\
+\end{equation}
+The series $c_v$ is an arithmetic sequence which can be seen by the following, $a_1 = v$ and $a_i = a_{i-1} + b$.  
+Then let $p_v$ be the product of the terms in $c_v$ series.
+\begin{equation}
+    p_v = \prod^\lambda_{i=1} (i-1)b + v
+\end{equation}
+Then we have the series $p_1, p_2, \cdots p_b$ whose product is $N!$.
+
+
+
+
+
+\subsection{Building Solution from Column's of G}
+
+Given the series $p_v$ from grid $G$ built for problem $(N_n, b_d)$ 
+we can apply sequence lemma LS5 for $v|5$ else apply LS3. This will give
+the $\frac{N!}{5^{z(N!)}} \mod b$. Then to get the solution $(N_n, b_d)$ 
+we need to use sequence lemma LS4 to remove 2's for each 5 we removed. 
+From LS4 we can remove $\lambda$ 2's at a time. However, then we would need
+to multiple back the extra 2's that were taken off. This is fine and can 
+be done mod b using lemma L1.
+\begin{align}
+    Z &= \lceil \frac{z(N!)}{\lambda} \rceil \\
+    R &= Z - z(N!)
+\end{align}
+There are $4\frac{b}{10}$ $p_v$ that can have LS4 applied to them. The following construction
+hold if $Z \leq 4\frac{b}{10}$ else a construction of a similar form will need to be made which is 
+fairly trivial with the machinery built up in the lemmas. The construction is as follows:
+\begin{align}    
+    S_5 &= \{5, 10, \cdots, b\} \\
+    S_2 &= \{2, 4, \cdots , b\} \setminus S_5 \land |S_2| = Z \\
+    S &= \{1, 2, \cdots , b\} \ \setminus S_2 \cup S_5
+\end{align}
+Let the $P_n(a_i) \mod b$ be the product of the first n terms of the series $a_i$ mod b (defined by LS2).
+Let the $P^5_n(a_i) \mod b$ be the product of the first n terms of the series $a_i$ dropping all 5's mod b (defined by LS3).
+\newline
+\newline
+The construction takes out $\lambda Z$ 2's which is $R$ more than the number of 2's need to be taken
+out which is $z(N!)$. So using lemma L1 we can add back $2^R$.
+\begin{equation}
+    (N_n, b_d) 
+    = 
+    \prod_{\forall v_i \in S, v_j \in S_2, v_k \in S_5}
+    [P_\lambda(c_{v_i}) \mod b] 
+    \cdot 
+    [P_\lambda(\frac{1}{2}c_{v_j}) \mod b] 
+    \cdot 
+    [P^5_\lambda(c_k) \mod b] \cdot 2^R 
+    \pmod b 
+\end{equation}
+
+\vspace*{\fill}
+\lstinputlisting[language=Python, firstline=194, lastline=225]{Factorial_Trailing_Digits_P160.py}
+
+
+
+
+
+
+
+
+
+
+\pagebreak
+\section{Sequence}
+
+\subsection{Lemma L1}
+
+Let $a,b \in \mathbb{N}$ then we can write $a$, $b$ and $ab$ with their 2's and 5's factored out:
+\newline
+\newline
+$a = \alpha \cdot 2^{\alpha_2} \cdot  5^{\alpha_5}$
+\newline
+$b = \beta \cdot 2^{\beta_2} \cdot  5^{\beta_5}$ 
+\newline
+$ab = \lambda \cdot 2^{\gamma} \cdot  5^{\gamma}$ where $\gamma \coloneq \min (\alpha_2 + \beta_2, \alpha_5 + \beta_5)$
+\newline
+
+The following two relations hold for any $m$.
+\begin{equation}
+    \alpha\beta \cdot 2^{\alpha_2 + \beta_2 - \gamma} \cdot  5^{\alpha_5 + \beta_5 - \gamma} 
+    \equiv
+    \lambda
+    \pmod m
+\end{equation}
+
+This then allow for the following:
+\begin{equation}
+    (\frac{a}{2^\gamma 5^\gamma} \mod m) (\frac{b}{2^\gamma 5^\gamma} \mod m)
+    \equiv
+    \lambda
+    \pmod m
+\end{equation}
+
+
+
+
+
+\subsection{Lemma LS1; Sequence is Purely Periodic}
+
+Given a sequence $a_i = (i-1) \cdot r + v$, $a_i \mod m$ where $i,r,v,m \in \mathbb{N}$ 
+is purely periodic with period $\tau = \frac{m}{gcd(r, m)}$. First redefine $a_i$ as $a_0 = v$ and $a_i = a_{i-1} + r$.
+Then we have $a_{k+l} = a_k + l r$ from the arithmetic progression.
+\begin{equation}
+    a_{k+l} \equiv a_k \pmod m  \leftrightarrow lr \equiv 0 \pmod m \leftrightarrow m|lr
+\end{equation}
+Let the smallest $m$ that satisfies $m|lr$ be $x$. Then $m|xr$ which implies that $m = \text{gcd}(m, xr)$.
+One possibility of $x = m$, is there smaller number that satisfies the condition?
+If $xr$ have a common divisor $d = \text gcd(x, r)$ then we get $x^* r^* d^2$ sill divides $m$ by definition.
+Since $m|d$ hold always we can pull $d$ out of out $x = m$ we can reduce $x$ to $\frac{m}{\text gcd(r, m)}$ which 
+is less than or equal to $m$ and since there is no other larger number that we can pull out of both $x^*$ and $r^*$,
+$x$ is the smallest it can be then i.e. it is our period $\tau$.
+[\href{https://math.stackexchange.com/questions/1861199/progressions-modulo-n}{1}]
+
+
+
+
+
+\pagebreak
+\subsection{Lemma LS2; Product of Periodic Sequence}
+Given a periodic sequence $a_i$ with period $\tau$ and the product of the first $n$ terms be $p_n$,
+then following allows for the computation of higher large $n$.
+\begin{equation}
+    \prod^n_{i=1} a_i = p_\tau^{\lfloor \frac{\lambda}{\tau} \rfloor} \cdot p_{n \text{ mod $\tau$}}
+\end{equation}
+
+\vspace*{\fill}
+\lstinputlisting[language=Python, firstline=123, lastline=141]{Factorial_Trailing_Digits_P160.py}
+
+
+
+
+
+
+\pagebreak
+\subsubsection{Series: (i-1)b + v mod b}
+We have the sequence $c_v(i) = (i-1)10^d + v = (i-1)2^d 5^d + v$. 
+We will use lemma L1, which requires $\text gcd(c_v, 5) = 1$. The only way 
+$\text gcd(c_v, 5) > 1$ is if $\text gcd(v, 5) > 1$. So for the following we
+will deal with cases in which $\text gcd(v, 5) = 1$ that is to say $v$ cannot be a multiple of 5. 
+Since all our elements in our sequence not divisible by 5 lemma L1 can be used to get $\mod b$ product. 
+Since our sequence is arithmetic we can use sequence lemma LS1 to get our 
+sequence  $\mod b$ has period $1 = \frac{b}{\text gcd(b,b)}$ and $c_v \mod b = v$.
+Using sequence lemma LS2 since we have a periodic sequence we get the following:
+
+\begin{align}
+    \prod^n_{i=1} a_i &\equiv (p_\tau \mod b)^{\lfloor \frac{\lambda}{\tau} \rfloor} \cdot (p_{n \text{ mod $\tau$}} \mod b) \pmod b \\
+    p_v &\equiv v^\lambda \pmod b
+\end{align}
+
+
+
+
+\subsubsection{Series: [(i-1)b/2 + v]/2 mod b}
+For the sequence $c_v(i) = (i-1)10^d + v = (i-1)2^d 5^d + v$ we want the mod $b$ 
+of the product of $\frac{1}{2} c_v(i)$  first $\lambda$ terms. Since $v|2$ and 
+$\text gcd(v, 5) = 1$ we can use L1, LS1 and LS2. 
+\begin{equation}
+    \frac{1}{2} c_v(i) = (i-1)2^{d-1} 5^d + \frac{v}{2}
+\end{equation}
+Using LS1 we get the period of the new sequence as $\frac{2^d 5^d}{\text gcd(2^{d-1} 5^d, 2^d 5^d)} = 2$.
+Then using LS2 we get the following and L1.
+\begin{equation}
+% \begin{align}
+    p_v 
+    \equiv 
+    [\frac{v}{2} \cdot (2^{d-1} 5^d + \frac{v}{2}) \mod b]^{ \lfloor \frac{\lambda}{2} \rfloor} \cdot (\frac{v}{2})^{\lambda \mod b}
+    \pmod b
+% \end{align}
+\end{equation}
+
+
+
+
+
+\pagebreak
+\subsection{Lemma LS3: Product of Series dropping 5's mod b}
+Let the series be of the form $a_i = (i-1) \cdot r + v$. From sequence lemma LS1 we know that
+$a_i$ is purely periodic with period $\tau = \frac{b}{\text gcd(r, b)}$. Find the following product:
+\begin{equation}
+    \prod^\lambda_{i=1} \frac{a_i}{5^{p^i_5}} \pmod b
+\end{equation}
+where $p^i_5$ is the exponent for the factor 5 for $a_i$'s factorization.
+Let $r = r^* 5^{p_r}$ and $v = v* 5^{p_v}$ where $\text gcd(r^*, 5) =  gcd(v^*, 5) = 1$. Then
+the series $a^*_i = (i-1) \cdot r^* + v^*$ product of first $\lambda$ terms dropping 5's mod b is
+the same as our original problem.
+\newline
+\newline
+case: $p_v < p_r$
+\newline
+\newline
+The series will not have any multiple of 5's i.e. $\text gcd(a^*_i, 5) = 1 \text{} \forall i \in \mathbb{N}$.
+Therefore sequence lemma LS2 can be used to find the product mod b.
+\newline
+\newline
+case: $p_r \leq p_v $
+\newline
+\newline
+The series will of the following form $a^*_i = (i-1) \cdot r^* + v^* 5^{p_v - p_r}$. When does $a^*_i|5$?
+The second term will have end in $\{5\}$ when $p_r < p_v$ and will be $\{1,2,3,4,6,7,8,9\}$ when $p_r = p_v$, 
+it could end in 0 iff $v = 0$. Without specifics analysis to find to smallest i for $a^*_i|5$ must be done manually. 
+To do this take the array $[0, \cdots, 9] (r^* \mod 10) + (v^* \mod 10)$ and find the first instance of
+a multiple of 5, the index (1-indexed) of this position be $O_5$. Then $a^*_{O_5} | 5$ is the first element in the series
+that is divisible by 5. The sequence $a^*_{O_5}, a^*_{O_5 + 5}, \cdots$ are all the terms that are multiple of 5. 
+\newline
+\newline
+Therefore, we can use sequence lemma LS2 for the terms in $a^*_i$ where $i \notin \{O_5, O_5 + 5, \cdots\}$ iff $O_5 \leq 5 \land \tau|5$ .
+The condition on the period of the sequence is from the fact that each period of the sequence needs to take out each instance
+of $a^*_i|5$ and need to line up with with in the period; this is true if the period of $a^*_i|5$ 5 is a factor of $\tau$ and 
+$i \neq O_5 + 5k \text{   } \forall k \in \mathbb{Z}$. 
+\newline
+\newline
+Therefore here does not seem to be a pattern for the terms $a^*_{O_5 + 5k}$ this can be seen by $a^*_{O_5 + 5k}|5^2$ is periodic
+but it will have its own $O_5^2$ that needs to be calculated. There will be at most $n_O = \lfloor \log_5 \lambda \rfloor$ offsets 
+that will needed to be calculated. And each offset $O_{5^{p_O}}$ the following must
+be true:
+\begin{align}
+    &\tau|5^{p_O} \\
+    &O_{5^{p_O}} \leq \tau \\
+    &O_{5^{p_O}} \leq 5^{p_O} \\
+    &5^{p_O} \leq \tau \\
+\end{align}
+These condition are not generally not going to be hold for $1 < p_O$, so
+the series $a^*_{ O_5 + 5k}$ will need to be brute forced.
+
+\vspace*{\fill}
+\lstinputlisting[language=Python, firstline=143, lastline=191]{Factorial_Trailing_Digits_P160.py}
+
+
+
+
+
+\pagebreak
+\section{Helper Methods}
+\lstinputlisting[language=Python, firstline=1, lastline=121]{Factorial_Trailing_Digits_P160.py}
+
+
+
+\end{document}
