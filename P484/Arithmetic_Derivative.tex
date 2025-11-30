@@ -1,0 +1,223 @@
+\documentclass[11pt]{article}
+
+\usepackage{sectsty}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{amssymb}
+
+\numberwithin{equation}{section}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\title{ Arithmetic Derivative } 
+\author{ Author }
+\date{Novemer 29, 2025}
+
+\begin{document}
+\maketitle	
+
+% Optional TOC
+\tableofcontents
+\pagebreak
+
+%--Paper--
+
+\section{ Problem 484 }
+Find the following sum:
+\begin{equation}
+    \sum^{5 \cdot 10^{15}}_{k = 2} \text gcd(k, k') 
+\end{equation}
+From the bounds of gcd, our sum has to between $N = 5 \cdot 10^{15}$ and $\frac{N(N+1)}{2}$.
+%
+%
+%
+%
+%
+\section{ Arithmetic Derivative }
+The arithmetic derivative is defined as follows:
+\begin{equation}
+\begin{aligned}
+    p' &= 1 \text{ for any prime p} \\
+    (ab)' &= a'b + ab'
+\end{aligned}
+\end{equation}
+
+
+
+\subsection{ Arithmetic Derivative of 1}
+The derivative of one can be found by looking at the base case of $p'$, take the following
+$(1 \cdot p)' = 1' \cdot p + p' \cdot 1 = 1$, $(1')$ must be 0.
+
+
+
+\subsection{ Arithmetic Derivative of Powers of p}
+ 
+\begin{equation}
+    (p^n)' = np^{n-1}    
+\end{equation}
+To prove this take the base case to be $p'=1$, and assume formula above. Now using proof by
+induction, show that $p^{n+1}$ has the same form.
+\begin{equation}
+\begin{aligned}
+    (p^{n+1})' &= (pp^n)' \\
+               &= p'p^n + p(p^n)' \\
+               &= p^n + npp^{n-1} \\
+               &= (n+1)p^{n+1}
+\end{aligned}
+\end{equation}
+
+
+
+\subsection{ Arithmetic Derivative of a Natural Number}
+
+Let $k \in \mathbb{N}$ have a prime factorization $p_1^{\alpha_1} \cdots p_n^{\alpha_n}$ 
+where $p_i$ is some prime and $\alpha_i \in \mathbb{N}$ is its corresponding power.
+\begin{equation}
+    k' = \sum^n_{i=1} \alpha_i \frac{k}{p_i}
+\end{equation}
+To prove this take the base case $(p^{\alpha_i}_i)' = \alpha_i p^{\alpha_i - 1}_i$, and assume the formula
+above. Now using proof by induction, show that $L' = (kp^{\alpha_{n+1}}_{n+1})'$ has the same form.
+\begin{equation}
+\begin{aligned}
+    (kp^{\alpha_{n+1}}_{n+1})' &= (p^{\alpha_{n+1}}_{n+1})'k + p^{\alpha_{n+1}}_{n+1} k' \\
+                               &= \alpha_{n+1}p^{\alpha_{n+1} - 1}_{n+1}k + p^{\alpha_{n+1}}_{n+1} \sum^n_{i=1} \alpha_i \frac{k}{p_i} \\
+                               &= \alpha_{n+1}\frac{L}{p_{n+1}} + \sum^n_{i=1} \alpha_i \frac{L}{p_i} \\
+                               &= \sum^{n+1}_{i=1} \alpha_i \frac{kp^{\alpha_{n+1}}_{n+1}}{p_i} 
+\end{aligned}
+\end{equation}
+It can be seen that $k'$ has a factor of $p_1^{\alpha_1 - 1} \cdots p_n^{\alpha_n - 1}$ in each part of 
+its sum.
+\begin{equation}
+    k' = p_1^{\alpha_1 - 1} \cdots p_n^{\alpha_n - 1} \sum^n_{i=1} \alpha_i \frac{p_1 \cdots p_n}{p_i}
+\end{equation}
+
+
+
+\subsection{The GCD of k and its Arithmetic Derivative}
+Using the closed form formula for $k'$ we can say that the $p_1^{\alpha_1 - 1} \cdots p_n^{\alpha_n - 1} \leq \text gcd(k, k')$.
+To remove the inequality, $\sum^n_{i=1} \alpha_i \frac{p_1 \cdots p_n}{p_i}$ needs to be analyzed. If the sum
+has a factor of $p_i$ then we can update $p_i^{\alpha_i - 1}$ to  $p_i^{\alpha_i}$ in our $\text gcd(k, k')$ calculation.
+So when does $p_i \mid \sum^n_{i=1} \alpha_i \frac{p_1 \cdots p_n}{p_i}$, for all the terms $j \neq i$ there is exactly
+one $p_i$ in them. Then when would $p_i | \alpha_i \frac{p_1 \cdots p_n}{p_i}$? There will be at least one factor of $p_i$
+when $p_i \mid \alpha_i$. So when $\alpha_i = p_i * j$ $\forall j \in \mathbb{N}$ we get an extra factor of $p_i$ in our $\text gcd(k, k')$.
+We will introduce a new function $g(k) = \text{gcd}(k, k')$ to help with readability.
+\begin{equation}
+    g(k)
+    =
+    \text{gcd}(k, k') 
+    = 
+    \prod^n_{i=1} 
+    \begin{cases}
+			p^{\alpha_i - 1}_i, & \text{if $p_i \nmid \alpha_i$} \\
+            p^{\alpha_i}_i,     & \text{if $p_i \mid \alpha_i$} \\
+	\end{cases}
+\end{equation}
+%
+%
+%
+%
+%
+\section{Properties of g(k)}
+
+The function $g(k)$ is a multiplicative function when partitioned by the $p^{\alpha_i}_i$.
+\begin{equation}
+    g(p_1^{\alpha_1} \cdots p_n^{\alpha_n}) = g(p_1^{\alpha_1}) \cdots g(p_n^{\alpha_n})
+\end{equation}
+\newline
+The $\sum g(k)$ can be factored if all the arguments share the same factor of $p_i$ and $\alpha_i$
+\begin{equation}
+\begin{aligned}
+    & g(p_1^{\alpha_1} \cdots p_n^{\alpha_n} \cdot q_1^{\beta_1} \cdots q_m^{\beta_m}) 
+    + 
+    g(p_1^{\alpha_1} \cdots p_n^{\alpha_n} \cdot r_1^{\gamma_1} \cdots r_o^{\gamma_o}) \\
+    &= 
+    g(p_1^{\alpha_1} \cdots p_n^{\alpha_n})[g(q_1^{\beta_1} \cdots q_m^{\beta_m}) + g(r_1^{\gamma_1} \cdots r_o^{\gamma_o})]
+\end{aligned}
+\end{equation}
+%
+%
+%
+%
+%
+\section{Creating Group G(p)}
+To find $\sum g(k)$ we need $k$'s prime factorization which is expensive. So we can try to build
+all the $k$'s using the primes which removes the need for prime factorization.
+
+
+\subsection{Brute Force}
+The brute force method of solving our sum would require calculating the prime factorization of each $k$.
+\begin{equation}
+    O(\sum g(k)) \propto \sum^N_{k=1} \sqrt{k} \approx \int_{1}^{N} \sqrt{x} dx \approx \frac{2}{3} N^{\frac{3}{2}}
+\end{equation}
+So we must find a procedure that has a significantly lower time complexity. So we must calculate $g(k)$ in terms 
+of some other $g(l)$ which saves the number of computations needed.
+
+\subsection{Motivation}
+If we have computed $g(p_1^{\alpha_1} \cdots p_n^{\alpha_n})$ then $g(q^\alpha \cdot p_1^{\alpha_1} \cdots p_n^{\alpha_n})
+= g(q^\alpha) g(p_1^{\alpha_1} \cdots p_n^{\alpha_n})$. So create groups $G$ such that we can calculate
+all the numbers $k$ that have a factor of $q^\alpha$.
+
+
+
+\subsection{Building Group G(p)}
+
+Let $p^{\alpha_n} \mid k \in G(p)$. Now, does $G(p_i) \cap G(p_j) = \emptyset$ when $i \neq j$? 
+No. There needs to be one more condition. We will require that $q \nmid k \in G(p)$
+where $q < p$.
+\begin{equation}
+    G(p) = \{k \quad \vert \quad 
+    p^\alpha \mid k \land q \nmid k \land 1 < k \leq N \quad
+    q < p,  \alpha \in \mathbb{N} \}
+\end{equation}
+The union of all our groups $G(p)$ is all the values of k we need for $\sum g(k)$.
+\begin{equation}
+    \sum g(k) = \sum_{p_i} \sum_{k \in G(p_i)} g(k)
+\end{equation}
+Why is $G(p)$ useful? There are $G(p) = \{p\}$; the p's that have this property 
+conform to the following:
+\begin{equation}
+    G(p) = \{p\} \quad \text{iff} \quad p^2 \nleq N
+\end{equation}
+The smallest element in $G(p)$ is p, the second smallest is $p^2$ since 
+$p^2 < p \cdot p_{next}$. For our N we get $\prescript{12}{}{P^*} = 70,710,707$.
+\begin{equation}
+\begin{aligned}
+        \sum_{p = \prescript{12}{}{P^*}}^{\pi(N)} G(p) &= \pi(N) - \pi(\prescript{12}{}{P^*}) + 1 \\
+        &\approx \frac{N}{\log N} - \frac{\prescript{12}{}{P^*}}{\log \prescript{12}{}{P^*}} + 1 \\
+        &\approx 138,319,418,975,671 - 39,12,265 + 1 \\
+        &\approx 138,319,415,063,407
+\end{aligned}    
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\pagebreak
+\section{}
+
+
+
+\end{document}

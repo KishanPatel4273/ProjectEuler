@@ -34,21 +34,21 @@ PRIMES = [2]
 
 @lru_cache
 def prime_factors(n : int) -> dict:
-    assert(is_natural_number(n))
-    global PRIMES
-    n = int(n)
-    f : dict[int][int] = {}
+    # assert(is_natural_number(n))
+    # global PRIMES
+    # n = int(n)
+    # f : dict[int][int] = {}
     
-    last_prime = None
-    for p in PRIMES:
-        while n % p == 0:
-            n //= p
-            f[p] = f.get(p, 0) + 1
-        last_prime = p
-        if n < p*p:
-            break
-    assert(last_prime is not None)
-    q = last_prime
+    # last_prime = None
+    # for p in PRIMES:
+    #     while n % p == 0:
+    #         n //= p
+    #         f[p] = f.get(p, 0) + 1
+    #     last_prime = p
+    #     if n < p*p:
+    #         break
+    # assert(last_prime is not None)
+    q = 2
     while q*q <= n:
         if n % q == 0:
             PRIMES.append(q)
