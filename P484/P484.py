@@ -44,6 +44,9 @@ def is_prime(n):
             return False
     return True
 
+def pi(x):
+    return x / math.log(x)
+
 def number_of_primes_in_factorization_less_than_N(N):
     assert(not N == 1)
     product = 2
@@ -67,7 +70,7 @@ def number_of_primes_in_factorization_less_than_N(N):
 # print(f)
 # print([v/N for v in f.values()])
 
-def largest_prime_less_than(p):
+def previous_prime(p):
     assert(not p == 2)
     if p == 3:
         return 2
@@ -76,7 +79,19 @@ def largest_prime_less_than(p):
     while not is_prime(p):
         p -= 2
     return p
-    
+
+def next_prime(p):
+    assert(p > 1)
+    if p == 2:
+        return 3
+    if p % 2 == 0:
+        p += 1
+    else:
+        p += 2
+    while not is_prime(p):
+        p += 2
+    return p
+
 
 def p12():
     N = 5 * int(10 ** 15)
@@ -91,19 +106,72 @@ def p12():
         while not is_prime(p := p + 2):
             pass
     print(p)
-    
-# p12()
-print()
-N = 5 * int(10 ** 15)
-p1 = 70710707
-p2 = 70710709
-print(f'N = {N}')
-print(70710709**2 <= N)
-print(70710707**2 <= N)
-print(70710677**2 <= N)
 
+def product(list : list[int]) -> int:
+    res = 1
+    for e in list:
+        res *= e
+    return res    
+
+def p1():
+    N = 5 * int(10 ** 15)
+    p12_1 = 70710677
+    p12_2 = 70710649
+    P = p12_2
+    prev = [p12_1]
+    g = 2
+    
+    while product(prev) <= N:
+        p = prev[-1]
+        while not is_prime(p := p + 2):
+            pass
+        if len(prev) == g:
+            P = prev.pop(0)
+        prev.append(p)
+    print(f'g={g} P={P} w/ {prev} *> {product(prev)},; {len(prev)} {product(prev) <= N}')
+
+
+def find_meta_groups():
+    N = 5 * int(10 ** 15)
+    for g in range(13, 1 - 1, -1):
+        start = int(N**(1/(g+1)))
+        print(f'Stat for g = {g} is {start}')
+        while not is_prime(start := start + 2):
+            pass
+        prev = [start]
+        while product(prev) <= N:
+            p = prev[-1]
+            while not is_prime(p := p + 2):
+                pass
+            if len(prev) == g:
+                prev.pop(0)
+            prev.append(p)
+        print(f'g={g} P={prev} *> {product(prev)}')
+
+    
+# find_meta_groups()
+# exit()
+p1()
+
+    
 p12 = 70710707
-print(N / math.log(N))
-print(p12 / math.log(p12))
-print(138319418975671 - 3912265 + 1 )
-# print(largest_prime_less_than(p1))
+
+N = 5 * int(10 ** 15)
+
+p12_1 = 70710677
+p12_2 = 70710649
+# 70710677
+
+# print(next_prime(p12_1))
+
+# print(p12_1 ** 2 <= N)
+
+# print(p12_2 * p12_1 <= N)
+# print(p12_1 * p12_1 <= N)
+# print(p12_1 * p12 <= N)
+
+a = 70710649
+na = next_prime(a)
+nna = next_prime(na)
+
+# print(na, a*na <= N, na*nna<=N)

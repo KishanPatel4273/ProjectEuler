@@ -186,20 +186,79 @@ conform to the following:
     G(p) = \{p\} \quad \text{iff} \quad p^2 \nleq N
 \end{equation}
 The smallest element in $G(p)$ is p, the second smallest is $p^2$ since 
-$p^2 < p \cdot p_{next}$. For our N we get $\prescript{12}{}{P^*} = 70,710,707$.
+$p^2 < p \cdot p_{+1}$ where $p_{+1}$ is the prime immediately after p. For our N we get $P^* = 70,710,707$.
 \begin{equation}
 \begin{aligned}
-        \sum_{p = \prescript{12}{}{P^*}}^{\pi(N)} G(p) &= \pi(N) - \pi(\prescript{12}{}{P^*}) + 1 \\
-        &\approx \frac{N}{\log N} - \frac{\prescript{12}{}{P^*}}{\log \prescript{12}{}{P^*}} + 1 \\
+        \sum_{p = P^*}^{\pi(N)} G(p) &= \pi(N) - \pi(P^*) + 1 \\
+        &\approx \frac{N}{\log N} - \frac{P^*}{\log P^*} + 1 \\
         &\approx 138,319,418,975,671 - 3,912,265 + 1 \\
         &\approx 138,319,415,063,407
 \end{aligned}    
 \end{equation}
-Since $\pi(\prescript{12}{}{P^*}) \approx 3,912,265$, the remaining groups contain
-all the numbers that are only composed of the first $3,912,265$ prime numbers.
+Since $\pi(\prescript{1}{}{P^*}) \approx 3,912,265$ ...?. However,
+there is a $G(p) = \{p, p^2\}$ (show that there is only one p that allows for this).
+\begin{equation}
+\begin{aligned}
+    G(p) &= \{p, p^2\} \quad \text{iff}  \quad p \cdot p_{+1} \nleq N \\
+    p &= \prescript{1}{}{P^*} = 70,710,677  \\
+    \sum_{k \in G(\prescript{1}{}{P^*})} g(k) &= 1 + p
+\end{aligned}
+\end{equation}
+
+\subsection{ Categorizing G(p) into 13 Meta-Groups }
+A meta group of n is a group of $G(p)$ such that $\mu(G(p)) = n$. The measure $\mu(G)$ measures the most 
+amount of primes a value in G has. For example, $\mu(p) = 1$, $\mu(2 \cdot 3) = 2$, $\mu(2^2 \cdot 3 \cdot 5 \cdot 7) = 4$, etc...
+So for the $G(2)$ the product of the first 13 primes is less then N, which is also the most amount of primes in a number in $G$, hence
+$\mu(G(2)) = 13$. 
+\begin{equation}
+    \mu(G(p)) = \underset{k \in G(p)}{\mathrm{argmax}} \quad \mu(k)
+\end{equation}
+For the problem at hand we can precompute when our measure changes; see table below. The constant's
+$\prescript{n}{}{P^*}$ convey that all primes below it have a measure of at least n. The can be formalized 
+by $n < \mu(G(p))$ for $\forall p < \prescript{n}{}{P^*}$. Combining all the relations one can derive the closed form
+solution to $\mu(G(p))$. The difficulty of computing the sum $\sum_{k \in G(p)} g(k)$ is related to the measure $\mu(G(p))$.
+\begin{equation}
+\begin{aligned}
+    \mu(G(p)) &= 13 \quad &\text{iff}& \quad  p = 2 \\
+    \mu(G(p)) &= n  \quad &\text{iff}& \quad  \prescript{n-1}{}{P^*} < p \leq \prescript{n}{}{P^*} \\    
+    \mu(G(p)) &= 1  \quad &\text{iff}& \quad  \prescript{1}{}{P^*} \leq p
+\end{aligned}
+\end{equation}
 
 
-
+\begin{center}
+\begin{tabular}{||c r @{=} l||} 
+ \hline
+ $\mu$ & \multicolumn{2}{c||}{$\prescript{n}{}{P^*}$}       \\ [1ex] 
+ \hline\hline
+ 13 & $\prescript{13}{}{P^*}$ & 2          \\ [1ex] 
+ \hline 
+ 12 & $\prescript{12}{}{P^*}$ & 5          \\ [1ex] 
+ \hline 
+ 11 & $\prescript{11}{}{P^*}$ & 11         \\ [1ex] 
+ \hline
+ 10 & $\prescript{10}{}{P^*}$ & 19         \\ [1ex] 
+ \hline
+ 9  & $\prescript{9}{}{P^*}$  & 37         \\ [1ex] 
+ \hline
+ 8  & $\prescript{8}{}{P^*}$  & 73         \\ [1ex] 
+ \hline
+ 7  & $\prescript{7}{}{P^*}$  & 157        \\ [1ex] 
+ \hline
+ 6  & $\prescript{6}{}{P^*}$  & 397        \\ [1ex] 
+ \hline
+ 5  & $\prescript{5}{}{P^*}$  & 1,361      \\ [1ex] 
+ \hline
+ 4  & $\prescript{4}{}{P^*}$  & 8,387      \\ [1ex] 
+ \hline
+ 3  & $\prescript{3}{}{P^*}$  & 170,957    \\ [1ex] 
+ \hline
+ 2  & $\prescript{2}{}{P^*}$  & 70,710,649 \\ [1ex] 
+ \hline
+ 1  & $\prescript{1}{}{P^*}$  & 70,710,677 \\ [1ex] 
+ \hline
+\end{tabular}
+\end{center}
 
 
 
