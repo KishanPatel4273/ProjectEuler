@@ -151,14 +151,27 @@ def find_meta_groups():
     
 # find_meta_groups()
 # exit()
-p1()
+# p1()
 
     
 p12 = 70710707
 
 N = 5 * int(10 ** 15)
 
+p_ = 2
+for i in range(3, int(math.sqrt(N))):
+    if is_prime(i):
+        if i**i <= N:
+            p_ = i
+            continue
+        print(p_, p_**p_ <= N, i, i**i <= N)
+        p_ = i
+        break
+        
+
 p12_1 = 70710677
+# print(pi(p12_1))
+
 p12_2 = 70710649
 # 70710677
 
