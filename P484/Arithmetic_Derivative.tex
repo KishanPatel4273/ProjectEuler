@@ -260,7 +260,27 @@ solution to $\mu(G(p))$. The difficulty of computing the sum $\sum_{k \in G(p)} 
 \end{tabular}
 \end{center}
 
+\section{ Calculating Prime Counting Function }
 
+In the building of $G(p)$, it was shown that having $\pi(N)$ will be use 
+full. After quick search the fastest algorithm to find the prime counting
+is given by M. Deleglise and J. Rivat 1996 paper.
+\begin{equation}
+    \pi(N = 5 \cdot 10^{15}) = 142,377,417,196,364 
+\end{equation}
+The $\phi$ function used in the paper can be used to define $G(p)$, which gives
+confidence that the grouping method might be on the right path.
+\begin{equation}
+    \phi(p, x) = \{k \leq x; q\mid k \rightarrow q > p\}
+\end{equation}
+
+\begin{equation}
+    G(p) = \bigcup_{\alpha = 0}^{\lfloor log_p N \rfloor} p^\alpha  \cdot \phi(p_+, \frac{N}{p^\alpha})
+\end{equation}
+
+\begin{equation}
+    \phi(p, x) = \bigcup_{\alpha = 0}^{\lfloor log_{p_+} N \rfloor} p_+^{\alpha} \cdot \phi(p_+, \frac{x}{p_+^\alpha})
+\end{equation}
 
 % https://cr.yp.to/bib/1996/deleglise.pdf
 
