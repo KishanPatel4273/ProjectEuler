@@ -39,8 +39,7 @@ def sieve(n):
     sqrt_n = int(math.sqrt(n))
     for p in range(2, sqrt_n+1):
         if primes[p] == True:
-            if not p*p <= n:
-                break
+            # p*p <= n by construction
             for i in range(p*p, n+1, p):
                 primes[i] = False
     return [i for i,p in enumerate(primes) if p == True]
