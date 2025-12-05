@@ -158,33 +158,43 @@ p12 = 70710707
 
 N = 5 * int(10 ** 15)
 
-p_ = 2
-for i in range(3, int(math.sqrt(N))):
-    if is_prime(i):
-        if i**i <= N:
-            p_ = i
-            continue
-        print(p_, p_**p_ <= N, i, i**i <= N)
-        p_ = i
-        break
-        
+# p_ = 2
+# for i in range(3, int(math.sqrt(N))):
+#     if is_prime(i):
+#         if i**i <= N:
+#             p_ = i
+#             continue
+#         print(p_, p_**p_ <= N, i, i**i <= N)
+#         p_ = i
+#         break
 
-p12_1 = 70710677
-# print(pi(p12_1))
+p_root_N = 70_710_649
+p_root_N_1 = next_prime(p_root_N)
+p_root_N_2 = next_prime(p_root_N_1)
+print(f'    {p_root_N} * {p_root_N_1} <= N, so end of measure 2 group G(p)')
+print(f'not {p_root_N_1} * {p_root_N_2} <= N, so end of measure 2 group G(p)')
+assert(p_root_N**2 <= N)
+assert(not p_root_N**3 <= N)
+assert(p_root_N * p_root_N_1 <= N)
+assert(not p_root_N_1 * p_root_N_2 <= N)
 
-p12_2 = 70710649
-# 70710677
-      
-# print(next_prime(p12_1))
+p3 = 70_957
+p3_1 = next_prime(p3)
+p3_2 = next_prime(p3_1)
+p3_3 = next_prime(p3_2)
+assert(p3 * p3_1 * p3_2 <= N)
+assert(not p3 * p3_1 * p3_2 * p3_3 <= N)
 
-# print(p12_1 ** 2 <= N)
+assert(p3_2 * p3_3 <= N)
+print(f'p3 = {p3} is start of measure 3, with range of q in ({p3}, {int((N/p3)**.5)}] to have q^2')
 
-# print(p12_2 * p12_1 <= N)
-# print(p12_1 * p12_1 <= N)
-# print(p12_1 * p12 <= N)
+print(f'p = {2}, the range of q for q^2 is (2, {int((N/(2))**.5)}]')
 
-a = 70710649
-na = next_prime(a)
-nna = next_prime(na)
+primes_in_3p = 0
+for n in range(70_957 + 1, 265_452 + 1):
+    if is_prime(n):
+        primes_in_3p += 1
+print(f'p = {2}, the range of q for q^2 is (2, {int((N/(2))**.5)}] which has {primes_in_3p} primes in it')
 
-# print(na, a*na <= N, na*nna<=N)
+print(pi( (N/(2)) ** .5 ))
+

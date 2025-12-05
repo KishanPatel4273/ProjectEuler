@@ -279,18 +279,55 @@ confidence that the grouping method might be on the right path.
 \end{equation}
 
 \begin{equation}
-    \phi(p, x) = \bigcup_{\alpha = 0}^{\lfloor log_{p_+} N \rfloor} p_+^{\alpha} \cdot \phi(p_+, \frac{x}{p_+^\alpha})
+    \phi(p, x) = \bigcup_{\alpha = 0}^{\lfloor log_{p_+} x \rfloor} p_+^{\alpha} \cdot \phi(p_+, \frac{x}{p_+^\alpha})
 \end{equation}
 
-% https://cr.yp.to/bib/1996/deleglise.pdf
+%
+%
+%
+%
+%
+\section{ Square Free Numbers }
+A square free number is a number that has at most one factor of each prime.
+We will define a set Q which will contain all the numbers less than x, 
+such that the lost prime factor is greater than p and the number is square
+free also.
+\begin{equation}
+    Q(p, x) = \{k \leq x, q \mid k \rightarrow q > p \land q^2 \nmid k \}
+\end{equation}
 
-
-
-
-
-
-
-
+\subsection{ g(k) equivalency set using Q(p, x) }
+The $g(k) = 1$ iff k is a square free number. So if we are given a number of
+the form $p^aq^b$ where the exponents are are at least 2. The we get $g(p^aq^b) = p^{a-1}q^{b-1}$
+all the numbers which we can produce the same value after apply g are just the product
+above time any square free number such that is doesn't share a common factor with p or q.
+%
+%
+%
+%
+%
+\section{ building G(p) from largest prime down to 2}
+For notation the subscript of prime p indicates which prime number it is. For example
+$p_{10}$ is the  10 th prime number, and $p_+$ is the next prime after p. From the equivalency
+notion we care about prime numbers that have at least a power of 2.
+\begin{equation}
+    p_{\pi(\sqrt{N})} = 70,710,649
+\end{equation}
+So all primes that are greater than $p_{\pi(\sqrt{N})}$ wont be part of
+our desired sum but those prime can be used as a square free number when
+building equivalency set under g. Lets now take a $G(p)$ that has a measure $\mu = 2$
+then a subset of such group is $\{p, p^2\}$. Take the number that can be formed with p
+the trivial form is p time all elements of $Q(p, \frac{N}{p})$. Or we could have prime greater
+than p which has a power of 2, this allows for primes q in the range $[p+1, \sqrt{\frac{N}{p}}]$.
+The algorithm would be to select a q in the range and then fill in the product with square free numbers,
+and repeat the range construction for higher powers of q and then select a next prime if there exist primes 
+in the range. The range decreases quite fast. Find the largest prime such that there cannot be 
+q with a power higher that one. To do this we the range to be degenerate in the sense that it contains no
+numbers or no primes, to have no numbers will be an easier condition to test for. $p < q$ then $p^2 < q^2$.
+The the largest q we can have in the product $pq^2 \leq N$ is $q = p_{\pi(\sqrt{\frac{N}{p}})}$. Since we have 
+solved for $\mu(G(p)) = 2$ and $\mu(G(p)) = 1$, lets move on to $\mu(G(p)) = 3$ the first prime to consider
+is $\prescript{3}{}{P^*} = 170,957$ which gives a range of prime q that is grater and has at least a power of 2
+to be $[p+1, \sqrt{\frac{N}{170,957}}] = [70,957 + 1, 265,452]$ which has 16239 primes.
 
 
 
