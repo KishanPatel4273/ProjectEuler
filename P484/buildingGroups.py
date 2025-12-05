@@ -18,7 +18,7 @@ def is_prime(n):
             return False
     return True
 
-def pi(x):
+def approximate_pi(x):
     return x / math.log(x)
 
 def sieve_brute_force(n):
@@ -68,18 +68,15 @@ def segmented_sieve(n):
                 start += p
 
             # cross out multiples of p in range
-            for i in range(start-left, right-left + 1, p):
+            for i in range(start - left, right - left + 1, p):
                 segment[i] = False
         
         # the gaps are primes 
-        primes_in_segments += [left+i for i,p in enumerate(segment) if p == True]
+        primes_in_segments += [left + i for i,p in enumerate(segment) if p == True]
     
     return primes + primes_in_segments
-            
         
-    
-
-def check_functions():
+def validate_sieve_algorithms():
     for n in range(10, 10000, 300):
         assert(sieve(n) == sieve_brute_force(n))
     
@@ -91,11 +88,53 @@ def check_functions():
     assert(a == b)
     assert(segmented_sieve(1_000_000) == sieve(1_000_000))
 
+def G(p):
+    N = int(5 * 10**15)
+    primes = time_fn("segmented_sieve", lambda : segmented_sieve(int((N//p)**.5)))
+    primes = list(filter(lambda q :  p < q, primes))
+    print(f'For p={p} there are {len(primes)} p < q that can have a power of 2')
     
+    alphas = [i for i in range(1, int(math.log(N)/math.log(p)) + 1)]
+    limits = [N//(int(p**a)) for a in alphas]
+    print(f'For p={p} can have at most a power of {len(alphas)}')
+    print(f'limits = {limits}')
+    stack = [(1, 0, len(primes) - 1)]
+    res = []
+    while stack:
+        cur, l, r = stack.pop(0)
+        if r < l:
+           res.append(p*cur)
+           continue
+        # find range of cur*q < N/p^a
+        q = primes[l]
+        next = cur*q*q
+        low = l + 1
+        high = limits[0] / next
+        for i in range(l+1, r):
+            if high < primes[i]:
+                high = i - 1
+                break
+        else:
+            high = l
+            
+        # stack.append((next, low, high))
+        stack.append((cur, low, r))
+    
+    print(res)
+    print(len(res))
+    
+
 if __name__ == '__main__':
-    # check_functions()
-    a = time_fn("segmented_sieve", lambda : segmented_sieve(100_000_000))
-    b = time_fn("sieve", lambda : sieve(100_000_000))
-    assert(a == b)
-    print(len(a))
+    # validate_sieve_algorithms()
+    # a = time_fn("segmented_sieve", lambda : segmented_sieve(100_000_000))
+    # b = time_fn("sieve", lambda : sieve(100_000_000))
+    # assert(a == b)
+    # print(len(a))
+    
+    # N = int(5 * 10**15)
+    # print(int((N/2)**.5))
+    # a = time_fn("sieve", lambda : sieve(int((N/2)**.5)))
+    # print(len(a))
+    
+    G(70_957)
     pass
