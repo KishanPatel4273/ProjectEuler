@@ -13,16 +13,18 @@ def square_free_numbers(n):
 
     for p in range(2, sqrt_n+1):
         if primes[p] == -1:
-            primes[p] = 1
             # p is prime
             p2 = p*p
-            for i in range(2*p, sqrt_n+1, p):
+            for i in range(p, sqrt_n+1, p):
+                # non square free number
                 if primes[i] == 0:
                     continue
+                # count distinct primes
                 if primes[i] == -1:
                     primes[i] = 1
                 else:
                     primes[i] += 1
+                # mark of non square free numbers
                 if i % p2 == 0:
                     primes[i] = 0
     square_free = n
